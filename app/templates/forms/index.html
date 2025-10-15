@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Survey Forms</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Survey Forms</h1>
+      <p class="tagline">
+        Browse published surveys, open a form to respond, or review archived versions.
+      </p>
+    </header>
+    <main class="container">
+      <section id="forms-container" class="card-list" aria-live="polite"></section>
+    </main>
+    <template id="form-card-template">
+      <article class="card">
+        <h2 class="card__title"></h2>
+        <p class="card__description"></p>
+        <dl class="card__meta">
+          <div>
+            <dt>Slug</dt>
+            <dd class="card__slug"></dd>
+          </div>
+          <div>
+            <dt>Version</dt>
+            <dd class="card__version"></dd>
+          </div>
+        </dl>
+        <div class="card__actions">
+          <a class="button" data-role="open-form">Open Form</a>
+          <span class="badge" data-role="archive-flag" hidden>Archived</span>
+        </div>
+      </article>
+    </template>
+    <script src="/static/js/forms-list.js" type="module"></script>
+  </body>
+</html>
