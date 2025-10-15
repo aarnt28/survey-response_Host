@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Practice Overview Questionaire</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body>
+    <header class="page-header">
+      <nav class="breadcrumb"><a href="/ui/forms">← Back to forms</a></nav>
+      <h1>Practice Overview Questionaire</h1>
+      <p class="tagline">A short questionnaire to capture high-level practice IT and software details.</p>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <form id="practice-overview-form" novalidate>
+          <fieldset id="questions" class="question-list">
+
+            <div class="question">
+              <label for="workstations">How many workstations?</label>
+              <input type="number" id="workstations" name="workstations" min="0" placeholder="e.g., 8" />
+              <p class="help-text">Enter the total number of user workstations (desktop/laptop) that access clinical systems.</p>
+            </div>
+
+            <div class="question">
+              <label>Is there an on-site server?</label>
+              <ul class="choice-list" role="radiogroup" aria-label="On-site server">
+                <li>
+                  <label><input type="radio" name="onsite_server" value="yes" /> Yes</label>
+                </li>
+                <li>
+                  <label><input type="radio" name="onsite_server" value="no" checked /> No</label>
+                </li>
+              </ul>
+              <p class="help-text">If yes, you may optionally note the server OS/vendor in the notes section below.</p>
+            </div>
+
+            <div class="question">
+              <label for="pms">What Practice Management Software (Dentrix, Ascend, Practice Works, Open Dental, Etc)?</label>
+              <input list="pms-list" id="pms" name="practice_management_software" placeholder="e.g., Dentrix, Open Dental" />
+              <datalist id="pms-list">
+                <option value="Dentrix"></option>
+                <option value="Open Dental"></option>
+                <option value="Eaglesoft"></option>
+                <option value="Carestream/Horizon"></option>
+                <option value="PracticeWorks"></option>
+                <option value="Ascend (Cloud)"></option>
+              </datalist>
+              <p class="help-text">Use the list or type your software name. For multiple, separate with commas.</p>
+            </div>
+
+            <div class="question">
+              <label for="imaging">What, if any, imaging specific software (Dexis, Jazz Classic, EagleSoft, etc)?</label>
+              <input type="text" id="imaging" name="imaging_software" placeholder="e.g., Dexis, Jazz Classic" />
+              <p class="help-text">List any imaging/viewer software used in the practice.</p>
+            </div>
+
+            <div class="question">
+              <label>Do you use Cloud Based Practice Management?</label>
+              <ul class="choice-list" role="radiogroup" aria-label="Cloud based practice management">
+                <li>
+                  <label><input type="radio" name="cloud_pms" value="yes" /> Yes</label>
+                </li>
+                <li>
+                  <label><input type="radio" name="cloud_pms" value="no" checked /> No</label>
+                </li>
+              </ul>
+              <p class="help-text">Select 'Yes' if your practice management system is delivered as a cloud-hosted service.</p>
+            </div>
+
+          </fieldset>
+
+          <div class="form-footer">
+            <label class="form-notes">
+              <span class="form-notes__label">Notes</span>
+              <textarea name="notes" rows="3" placeholder="Optional: add server details, versions, or other context"></textarea>
+            </label>
+
+            <label class="form-respondent">
+              <span class="form-respondent__label">Respondent identifier</span>
+              <input type="text" name="respondent_identifier" placeholder="e.g. email or staff ID" />
+            </label>
+
+            <button type="submit" class="button button--primary">Submit response</button>
+          </div>
+
+          <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
