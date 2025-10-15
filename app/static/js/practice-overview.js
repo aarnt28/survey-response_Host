@@ -6,15 +6,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!form) return;
 
+  const submitButton = form.querySelector('[data-role="submit"]');
+
   form.addEventListener('submit', async (ev) => {
     ev.preventDefault();
     message.textContent = '';
+    message.classList.remove('error');
+    message.classList.add('form-message');
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.setAttribute('aria-busy', 'true');
+    }
 
     const formData = new FormData(form);
     const payload = {};
-    for (const [k, v] of formData.entries()) {
-      // For radio groups, FormData will set the field name properly
-      payload[k] = v;
+    for (const [key, value] of formData.entries()) {
+      if (key === 'workstations' && value !== '') {
+        payload[key] = Number(value);
+      } else if (key === 'onsite_server' || key === 'cloud_pms') {
+        payload[key] = value === 'yes';
+      } else {
+        payload[key] = value;
+      }
     }
 
     try {
@@ -32,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      const body = await res.json().catch(() => ({}));
+      await res.json().catch(() => ({}));
       message.classList.remove('error');
       message.classList.add('form-message');
       message.textContent = 'Response submitted. Thank you!';
@@ -42,6 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
       message.classList.add('error');
       message.textContent = 'Network error — please try again.';
       console.error(err);
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.removeAttribute('aria-busy');
+      }
     }
   });
 });

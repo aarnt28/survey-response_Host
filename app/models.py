@@ -149,3 +149,21 @@ def _set_question_metadata(question: Question, value: Optional[dict]) -> None:
 
 
 Question.metadata = property(_get_question_metadata, _set_question_metadata)
+
+
+class PracticeOverviewResponse(Base):
+    __tablename__ = "practice_overview_responses"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    workstations: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    onsite_server: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    practice_management_software: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    imaging_software: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    cloud_pms: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    respondent_identifier: Mapped[Optional[str]] = mapped_column(
+        String(255), nullable=True
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )

@@ -7,7 +7,15 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from . import schemas
-from .models import Answer, Form, FormVersion, Question, QuestionType, ResponseGroup
+from .models import (
+    Answer,
+    Form,
+    FormVersion,
+    PracticeOverviewResponse,
+    Question,
+    QuestionType,
+    ResponseGroup,
+)
 
 
 class FormAlreadyExistsError(ValueError):
@@ -244,3 +252,30 @@ def _validate_answer(question: Question, value: str) -> None:
             raise ValueError(
                 f"Answer for question '{question.prompt}' includes invalid choices"
             )
+
+
+def create_practice_overview_response(
+    session: Session, payload: schemas.PracticeOverviewSubmission
+) -> PracticeOverviewResponse:
+    response = PracticeOverviewResponse(
+        workstations=payload.workstations,
+        onsite_server=payload.onsite_server,
+        practice_management_software=payload.practice_management_software,
+        imaging_software=payload.imaging_software,
+        cloud_pms=payload.cloud_pms,
+        notes=payload.notes,
+        respondent_identifier=payload.respondent_identifier,
+    )
+    session.add(response)
+    session.flush()
+    session.refresh(response)
+    return response
+
+
+def list_practice_overview_responses(
+    session: Session,
+) -> List[PracticeOverviewResponse]:
+    stmt = select(PracticeOverviewResponse).order_by(
+        PracticeOverviewResponse.created_at.desc()
+    )
+    return session.scalars(stmt).all()

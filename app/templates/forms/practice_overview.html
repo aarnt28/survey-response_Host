@@ -17,15 +17,25 @@
       <section class="card">
         <form id="practice-overview-form" novalidate>
           <fieldset id="questions" class="question-list">
+            <legend class="sr-only">Practice overview questions</legend>
 
             <div class="question">
               <label for="workstations">How many workstations?</label>
-              <input type="number" id="workstations" name="workstations" min="0" placeholder="e.g., 8" />
-              <p class="help-text">Enter the total number of user workstations (desktop/laptop) that access clinical systems.</p>
+              <input
+                type="number"
+                id="workstations"
+                name="workstations"
+                min="0"
+                inputmode="numeric"
+                placeholder="e.g., 8"
+              />
+              <p class="help-text">
+                Enter the total number of user workstations (desktop or laptop) that access clinical systems.
+              </p>
             </div>
 
             <div class="question">
-              <label>Is there an on-site server?</label>
+              <span class="question__label">Is there an on-site server?</span>
               <ul class="choice-list" role="radiogroup" aria-label="On-site server">
                 <li>
                   <label><input type="radio" name="onsite_server" value="yes" /> Yes</label>
@@ -39,7 +49,13 @@
 
             <div class="question">
               <label for="pms">What Practice Management Software (Dentrix, Ascend, Practice Works, Open Dental, Etc)?</label>
-              <input list="pms-list" id="pms" name="practice_management_software" placeholder="e.g., Dentrix, Open Dental" />
+              <input
+                list="pms-list"
+                id="pms"
+                name="practice_management_software"
+                placeholder="e.g., Dentrix, Open Dental"
+                autocomplete="off"
+              />
               <datalist id="pms-list">
                 <option value="Dentrix"></option>
                 <option value="Open Dental"></option>
@@ -58,7 +74,7 @@
             </div>
 
             <div class="question">
-              <label>Do you use Cloud Based Practice Management?</label>
+              <span class="question__label">Do you use Cloud Based Practice Management?</span>
               <ul class="choice-list" role="radiogroup" aria-label="Cloud based practice management">
                 <li>
                   <label><input type="radio" name="cloud_pms" value="yes" /> Yes</label>
@@ -69,26 +85,30 @@
               </ul>
               <p class="help-text">Select 'Yes' if your practice management system is delivered as a cloud-hosted service.</p>
             </div>
-
           </fieldset>
 
           <div class="form-footer">
             <label class="form-notes">
               <span class="form-notes__label">Notes</span>
-              <textarea name="notes" rows="3" placeholder="Optional: add server details, versions, or other context"></textarea>
+              <textarea
+                name="notes"
+                rows="3"
+                placeholder="Optional: add server details, versions, or other context"
+              ></textarea>
             </label>
 
             <label class="form-respondent">
               <span class="form-respondent__label">Respondent identifier</span>
-              <input type="text" name="respondent_identifier" placeholder="e.g. email or staff ID" />
+              <input type="text" name="respondent_identifier" placeholder="e.g., email or staff ID" />
             </label>
 
-            <button type="submit" class="button button--primary">Submit response</button>
+            <button type="submit" class="button button--primary" data-role="submit">Submit response</button>
           </div>
 
           <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
         </form>
       </section>
     </main>
+    <script src="/static/js/practice-overview.js" type="module"></script>
   </body>
 </html>

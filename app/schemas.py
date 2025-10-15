@@ -152,3 +152,41 @@ class ResponseGroupRead(BaseModel):
 
 class ArchiveAction(BaseModel):
     archived: bool
+
+
+def _strip_blank(value: Optional[str]) -> Optional[str]:
+    if value is None:
+        return None
+    if isinstance(value, str):
+        stripped = value.strip()
+        return stripped or None
+    return value
+
+
+class PracticeOverviewSubmission(BaseModel):
+    workstations: Optional[int] = Field(default=None, ge=0)
+    onsite_server: bool
+    practice_management_software: Optional[str] = None
+    imaging_software: Optional[str] = None
+    cloud_pms: bool
+    notes: Optional[str] = None
+    respondent_identifier: Optional[str] = None
+
+    _strip_practice_management = validator(
+        "practice_management_software", allow_reuse=True, pre=True
+    )(_strip_blank)
+    _strip_imaging = validator("imaging_software", allow_reuse=True, pre=True)(
+        _strip_blank
+    )
+    _strip_notes = validator("notes", allow_reuse=True, pre=True)(_strip_blank)
+    _strip_identifier = validator(
+        "respondent_identifier", allow_reuse=True, pre=True
+    )(_strip_blank)
+
+
+class PracticeOverviewSubmissionRead(PracticeOverviewSubmission):
+    id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
