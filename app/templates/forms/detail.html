@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body data-form-slug="{{ slug }}">
+    <header class="page-header">
+      <nav class="breadcrumb"><a href="/ui/forms">← Back to forms</a></nav>
+      <h1 id="form-title">Loading form…</h1>
+      <p id="form-description" class="tagline"></p>
+      <dl class="form-meta">
+        <div>
+          <dt>Slug</dt>
+          <dd id="form-slug"></dd>
+        </div>
+        <div>
+          <dt>Version</dt>
+          <dd id="form-version"></dd>
+        </div>
+        <div>
+          <dt>Status</dt>
+          <dd id="form-status"></dd>
+        </div>
+      </dl>
+    </header>
+    <main class="container">
+      <section class="card">
+        <form id="dynamic-form" novalidate>
+          <fieldset id="questions" class="question-list"></fieldset>
+          <div class="form-footer">
+            <label class="form-notes">
+              <span class="form-notes__label">Notes</span>
+              <textarea name="notes" rows="3" placeholder="Optional notes"></textarea>
+            </label>
+            <label class="form-respondent">
+              <span class="form-respondent__label">Respondent identifier</span>
+              <input
+                type="text"
+                name="respondent_identifier"
+                placeholder="e.g. email or participant ID"
+              />
+            </label>
+            <button type="submit" class="button button--primary">Submit response</button>
+          </div>
+        </form>
+        <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
+      </section>
+      <section class="card" id="versions-card">
+        <h2>Version history</h2>
+        <ul id="version-list" class="version-list"></ul>
+      </section>
+    </main>
+    <script src="/static/js/form-detail.js" type="module"></script>
+  </body>
+</html>

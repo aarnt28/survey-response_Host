@@ -6,6 +6,7 @@ from typing import List, Optional
 
 from sqlalchemy import (
     JSON,
+    Boolean,
     DateTime,
     Enum as SAEnum,
     ForeignKey,
@@ -35,9 +36,15 @@ class Form(Base):
     slug: Mapped[str] = mapped_column(String(100), unique=True, index=True)
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    version: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     created_at: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.utcnow, nullable=False
     )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+    is_archived: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    archived_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
 
     questions: Mapped[List["Question"]] = relationship(
         "Question",
@@ -47,6 +54,29 @@ class Form(Base):
     )
     response_groups: Mapped[List["ResponseGroup"]] = relationship(
         "ResponseGroup", back_populates="form", cascade="all, delete-orphan"
+    )
+    versions: Mapped[List["FormVersion"]] = relationship(
+        "FormVersion", back_populates="form", cascade="all, delete-orphan"
+    )
+
+
+class FormVersion(Base):
+    __tablename__ = "form_versions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    form_id: Mapped[int] = mapped_column(ForeignKey("forms.id", ondelete="CASCADE"))
+    version: Mapped[int] = mapped_column(Integer, nullable=False)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    questions_snapshot: Mapped[dict] = mapped_column(JSON, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+
+    form: Mapped[Form] = relationship("Form", back_populates="versions")
+
+    __table_args__ = (
+        UniqueConstraint("form_id", "version", name="uq_form_version"),
     )
 
 
@@ -59,7 +89,9 @@ class Question(Base):
     type: Mapped[QuestionType] = mapped_column(SAEnum(QuestionType), nullable=False)
     position: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     required: Mapped[bool] = mapped_column(default=False, nullable=False)
-    metadata: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    metadata_json: Mapped[Optional[dict]] = mapped_column(
+        "metadata", JSON, nullable=True
+    )
 
     form: Mapped[Form] = relationship("Form", back_populates="questions")
     answers: Mapped[List["Answer"]] = relationship(
@@ -67,6 +99,7 @@ class Question(Base):
     )
 
     __table_args__ = (UniqueConstraint("form_id", "position", name="uq_question_position"),)
+
 
 
 class ResponseGroup(Base):
@@ -79,6 +112,9 @@ class ResponseGroup(Base):
         DateTime, default=datetime.utcnow, nullable=False
     )
     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    form_version: Mapped[int] = mapped_column(Integer, nullable=False)
+    is_archived: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    archived_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
 
     form: Mapped[Form] = relationship("Form", back_populates="response_groups")
     answers: Mapped[List["Answer"]] = relationship(
@@ -102,3 +138,14 @@ class Answer(Base):
         "ResponseGroup", back_populates="answers"
     )
     question: Mapped[Question] = relationship("Question", back_populates="answers")
+
+
+def _get_question_metadata(question: Question) -> Optional[dict]:
+    return question.metadata_json
+
+
+def _set_question_metadata(question: Question, value: Optional[dict]) -> None:
+    question.metadata_json = value
+
+
+Question.metadata = property(_get_question_metadata, _set_question_metadata)
