@@ -165,6 +165,26 @@ def forms_ui(request: Request):
     return templates.TemplateResponse("forms/index.html", {"request": request})
 
 
+@app.get("/ui/forms/practice-overview", response_class=HTMLResponse)
+def practice_overview_ui(request: Request):
+    return templates.TemplateResponse(
+        "forms/practice_overview.html", {"request": request}
+    )
+
+
+@app.post(
+    "/ui/forms/practice-overview/submit",
+    response_model=schemas.PracticeOverviewSubmissionRead,
+    status_code=status.HTTP_201_CREATED,
+)
+def submit_practice_overview(
+    payload: schemas.PracticeOverviewSubmission,
+    session: Session = Depends(get_db_session),
+):
+    submission = crud.create_practice_overview_response(session, payload)
+    return submission
+
+
 @app.get("/ui/forms/{slug}", response_class=HTMLResponse)
 def form_detail_ui(request: Request, slug: str):
     return templates.TemplateResponse("forms/detail.html", {"request": request, "slug": slug})
